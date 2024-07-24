@@ -119,12 +119,14 @@ const play = (function () {
 
     // display stats
     if (game.gameOver || game.tie) {
-      displayController.displayStats(
-        `GameOver: ${game.gameOver}, Tie: ${game.tie}, Winner: ${
-          game.tie ? null : game.winner
-        }`
-      );
+      play.makeStats();
     }
+  };
+
+  const makeStats = function () {
+    if (game.tie) return displayController.displayStats("It's a tie.");
+
+    displayController.displayStats(`${game.winner} won`);
   };
 
   const checkTie = function () {
@@ -159,6 +161,7 @@ const play = (function () {
     changeGameBoard,
     changeGameProperties,
     resetGameBoard,
+    makeStats,
   };
 })();
 
