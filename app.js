@@ -1,10 +1,8 @@
-console.log('hooked');
-
 const gameBoard = (function gameBoard() {
   const board = [
-    ['', '', ''],
-    ['', '', ''],
-    ['', '', ''],
+    ['x', '', ''],
+    ['x', '', ''],
+    ['x', '', ''],
   ];
 
   function playMove(row, col) {
@@ -17,10 +15,55 @@ const gameBoard = (function gameBoard() {
     }
   }
 
-  return { board, playMove };
+  function checkGameOver() {
+    // checkColumns
+    // [0][0], [0][1], [0][2]
+    // [1][0], [1][1], [1][2]
+    // [2][0], [2][1], [2][2]
+    for (let i = 0; i < 3; i++) {
+      if (
+        this.board[i][0] == this.board[i][1] &&
+        this.board[i][1] == this.board[i][2] &&
+        this.board[i][0] != ''
+      ) {
+        return true;
+      }
+    }
+
+    // checkRows
+    // [0][0], [1][0], [2][0]
+    // [0][1], [1][1], [2][1]
+    // [0][2], [1][2], [2][2]
+    for (let i = 0; i < 3; i++) {
+      if (
+        this.board[0][i] == this.board[1][i] &&
+        this.board[1][i] == this.board[2][i] &&
+        this.board[0][i] != ''
+      ) {
+        return true;
+      }
+    }
+
+    // checkDiagnols
+    // 0][0], [1][1], [2][2]
+    // [0][2], [1][1], [2][0]
+    if (
+      (this.board[0][0] == this.board[1][1] &&
+        this.board[1][1] == this.board[2][2] &&
+        this.board[0][0] != '') ||
+      (this.board[0][2] == this.board[1][1] &&
+        this.board[1][1] == this.board[2][0] &&
+        this.board[0][2] != '')
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  return { board, playMove, checkGameOver };
 })();
 
-gameBoard.playMove(1, 2);
-gameBoard.playMove(3, 3);
-
 console.log(gameBoard.board);
+
+console.log(gameBoard.checkGameOver());
