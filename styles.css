@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'Minecraftia';
+  src: url(./src/fonts/Minecraftia.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+body {
+  font-family: 'Minecraftia', Arial, Helvetica, sans-serif;
+}
