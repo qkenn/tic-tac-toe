@@ -1,20 +1,20 @@
-const gameBoard = (function gameBoard() {
+const game = (function game() {
   const board = [
     ['', '', ''],
     ['', '', ''],
     ['', '', ''],
   ];
 
-  let currentPlayerId = 1;
+  const currentPlayer = { id: 1, symbol: 'x' };
 
-  let currentPlayerSymbol = 'x';
+  let gameOver = false;
 
-  return { board, currentPlayerId, currentPlayerSymbol };
+  return { board, currentPlayer };
 })();
 
 function player(id, name, symbol) {
   const changeName = function (newName) {
-    gameBoard.name = newName;
+    this.name = newName;
   };
 
   return { id, name, symbol, changeName };
@@ -23,43 +23,35 @@ function player(id, name, symbol) {
 const play = (function () {
   function checkGameOver() {
     // checkColumns
-    // [0][0], [0][1], [0][2]
-    // [1][0], [1][1], [1][2]
-    // [2][0], [2][1], [2][2]
     for (let i = 0; i < 3; i++) {
       if (
-        gameBoard.board[i][0] == gameBoard.board[i][1] &&
-        gameBoard.board[i][1] == gameBoard.board[i][2] &&
-        gameBoard.board[i][0] != ''
+        game.board[i][0] == game.board[i][1] &&
+        game.board[i][1] == game.board[i][2] &&
+        game.board[i][0] != ''
       ) {
         return true;
       }
     }
 
     // checkRows
-    // [0][0], [1][0], [2][0]
-    // [0][1], [1][1], [2][1]
-    // [0][2], [1][2], [2][2]
     for (let i = 0; i < 3; i++) {
       if (
-        gameBoard.board[0][i] == gameBoard.board[1][i] &&
-        gameBoard.board[1][i] == gameBoard.board[2][i] &&
-        gameBoard.board[0][i] != ''
+        game.board[0][i] == game.board[1][i] &&
+        game.board[1][i] == game.board[2][i] &&
+        game.board[0][i] != ''
       ) {
         return true;
       }
     }
 
     // checkDiagnols
-    // 0][0], [1][1], [2][2]
-    // [0][2], [1][1], [2][0]
     if (
-      (gameBoard.board[0][0] == gameBoard.board[1][1] &&
-        gameBoard.board[1][1] == gameBoard.board[2][2] &&
-        gameBoard.board[0][0] != '') ||
-      (gameBoard.board[0][2] == gameBoard.board[1][1] &&
-        gameBoard.board[1][1] == gameBoard.board[2][0] &&
-        gameBoard.board[0][2] != '')
+      (game.board[0][0] == game.board[1][1] &&
+        game.board[1][1] == game.board[2][2] &&
+        game.board[0][0] != '') ||
+      (game.board[0][2] == game.board[1][1] &&
+        game.board[1][1] == game.board[2][0] &&
+        game.board[0][2] != '')
     ) {
       return true;
     }
@@ -68,43 +60,79 @@ const play = (function () {
   }
 
   function changePlayers() {
-    gameBoard.currentPlayerId == 1
-      ? (gameBoard.currentPlayerId = 2)
-      : (gameBoard.currentPlayerId = 1);
+    game.currentPlayer.id == 1
+      ? (game.currentPlayer.id = 2)
+      : (game.currentPlayer.id = 1);
 
-    gameBoard.currentPlayerSymbol == 'x'
-      ? (gameBoard.currentPlayerSymbol = 'o')
-      : (gameBoard.currentPlayerSymbol = 'x');
+    game.currentPlayer.symbol == 'x'
+      ? (game.currentPlayer.symbol = 'o')
+      : (game.currentPlayer.symbol = 'x');
   }
 
-  function playOneRound(row, col) {
-    // mark move on the bord
+  function playOneRound(row, col, cell) {
+    if (checkGameOver()) return;
+
+    // mark symbol on the cell
     for (let i = 1; i <= 3; i++) {
       for (let j = 1; j <= 3; j++) {
         if (i == row && j == col) {
-          gameBoard.board[row - 1][col - 1] = gameBoard.currentPlayerSymbol;
+          game.board[row - 1][col - 1] = game.currentPlayer.symbol;
         }
       }
     }
 
-    if (this.checkGameOver()) console.log('game over');
+    displayController.displayMove(cell);
 
-    this.changePlayers();
+    if (play.checkGameOver()) {
+      play.getGameStats();
+
+      return;
+    }
+
+    play.changePlayers();
   }
 
-  return { checkGameOver, changePlayers, playOneRound };
+  function getGameStats() {
+    console.log(`You won ${game.currentPlayer.symbol}`);
+  }
+
+  return { checkGameOver, changePlayers, playOneRound, getGameStats };
 })();
 
 const player1 = player(1, 'erik', 'o');
 const player2 = player(2, 'stan', 'x');
 
-console.log(player1);
+console.log(game.board);
 
-play.playOneRound(1, 2);
-play.playOneRound(2, 2);
-play.playOneRound(1, 1);
-play.playOneRound(3, 1);
-play.playOneRound(3, 3);
-play.playOneRound(1, 3);
+const displayController = (function () {
+  const gameBoardEl = document.getElementById('gameboard');
 
-console.log(gameBoard.board);
+  const displayMove = function (cell) {
+    if (!cell.dataset.checked) {
+      cell.textContent = game.currentPlayer.symbol;
+      cell.dataset.checked = true;
+    }
+  };
+
+  const initiateGame = function () {
+    gameBoardEl.addEventListener('click', function (e) {
+      // listen for a click event only on cells
+      if (!e.target.classList.contains('cell')) return;
+
+      // extract data
+      const currentCell = e.target;
+      const row = e.target.dataset.row;
+      const col = e.target.dataset.col;
+
+      // avoid playing on same cell twice
+      if (!currentCell.dataset.checked) {
+        play.playOneRound(row, col, currentCell);
+      }
+      console.log(game.board);
+    });
+  };
+
+  return { initiateGame, displayMove };
+})();
+
+displayController.initiateGame();

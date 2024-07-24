@@ -28,19 +28,33 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  max-width: 40rem;
+  max-width: 35rem;
   margin: 0 auto;
 }
 
 .cell {
   flex-basis: calc(33.33% - 20px);
   aspect-ratio: 1;
-  background-color: #eee;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  border: 5px solid black;
+  cursor: pointer;
+  font-size: 5rem;
+}
+
+.cell:nth-child(4),
+.cell:nth-child(5),
+.cell:nth-child(6) {
+  border-top: 5px solid black;
+  border-bottom: 5px solid black;
+}
+
+.cell:nth-child(2),
+.cell:nth-child(5),
+.cell:nth-child(8) {
+  border-left: 5px solid black;
+  border-right: 5px solid black;
 }
 
 /* GAMEBOAD END */
