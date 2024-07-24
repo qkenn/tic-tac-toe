@@ -10,7 +10,7 @@ body {
 
 .main {
   max-width: 80rem;
-  margin: 5rem auto;
+  margin: 4rem auto;
 }
 
 /* HEADER START */
@@ -18,6 +18,10 @@ body {
 .main-title {
   text-align: center;
   font-size: 4rem;
+}
+
+.stats {
+  text-align: center;
 }
 
 /* HEADER END */
@@ -29,7 +33,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   max-width: 35rem;
-  margin: 0 auto;
+  margin: 4rem auto;
 }
 
 .cell {
