@@ -7,3 +7,40 @@
 body {
   font-family: 'Minecraftia', Arial, Helvetica, sans-serif;
 }
+
+.main {
+  max-width: 80rem;
+  margin: 5rem auto;
+}
+
+/* HEADER START */
+
+.main-title {
+  text-align: center;
+  font-size: 4rem;
+}
+
+/* HEADER END */
+
+/* GAMEBOAD START */
+
+.gameboard-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.cell {
+  flex-basis: calc(33.33% - 20px);
+  aspect-ratio: 1;
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: 5px solid black;
+}
+
+/* GAMEBOAD END */
