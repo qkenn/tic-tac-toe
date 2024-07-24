@@ -10,18 +10,15 @@ body {
 
 .main {
   max-width: 80rem;
-  margin: 4rem auto;
+  margin: 3.2rem auto;
 }
 
 /* HEADER START */
 
 .main-title {
   text-align: center;
-  font-size: 4rem;
-}
-
-.stats {
-  text-align: center;
+  font-size: 3.5rem;
+  margin: 0;
 }
 
 /* HEADER END */
@@ -62,3 +59,26 @@ body {
 }
 
 /* GAMEBOAD END */
+
+/* CONTROLS SECTION START */
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.stats {
+  text-align: center;
+}
+
+.reset-btn {
+  padding: 0.5em 1.7em;
+  font-family: inherit;
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+}
+
+/* CONTROLS SECTION END */

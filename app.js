@@ -1,5 +1,5 @@
 const game = (function game() {
-  const board = [
+  let board = [
     ['', '', ''],
     ['', '', ''],
     ['', '', ''],
@@ -143,6 +143,14 @@ const play = (function () {
     }
   };
 
+  const resetGameBoard = function () {
+    game.board = [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ];
+  };
+
   return {
     checkMatch,
     changePlayers,
@@ -150,12 +158,15 @@ const play = (function () {
     checkTie,
     changeGameBoard,
     changeGameProperties,
+    resetGameBoard,
   };
 })();
 
 const displayController = (function () {
   const gameBoardEl = document.getElementById('gameboard');
   const statsEl = document.getElementById('stats');
+  const resetBtn = document.getElementById('reset');
+  const cellElements = document.querySelectorAll('.cell');
 
   const displayMove = function (cell) {
     // mark cell as checked after displaying symbol
@@ -183,10 +194,34 @@ const displayController = (function () {
       if (!currentCell.dataset.checked) {
         play.makeMove(row, col, currentCell);
       }
+
+      displayController.resetGame();
     });
   };
 
-  return { initiateGame, displayMove, displayStats };
+  const resetGame = function () {
+    resetBtn.addEventListener('click', function () {
+      // reset internal gameboard
+      play.resetGameBoard();
+
+      // reset game properties
+      game.currentPlayer = { id: 1, symbol: 'x' };
+      game.gameOver = false;
+      game.winner = '';
+      game.tie = false;
+
+      // reset dom cells
+      cellElements.forEach((cell) => {
+        cell.textContent = '';
+        cell.removeAttribute('data-checked');
+      });
+
+      // reset stats
+      statsEl.textContent = '';
+    });
+  };
+
+  return { initiateGame, displayMove, displayStats, resetGame };
 })();
 
 displayController.initiateGame();
