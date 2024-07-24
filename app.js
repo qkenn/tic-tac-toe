@@ -5,7 +5,7 @@ const game = (function game() {
     ['', '', ''],
   ];
 
-  const currentPlayer = { id: 1, symbol: 'x' };
+  let currentPlayer = { id: 1, symbol: 'x' };
   let gameOver = false;
   let winner = '';
   let tie = false;
@@ -29,6 +29,7 @@ const play = (function () {
   };
 
   const checkMatch = function () {
+    // colomns match
     const checkCol = function () {
       for (let i = 0; i < 3; i++) {
         if (
@@ -41,6 +42,7 @@ const play = (function () {
       }
     };
 
+    // rows match
     const checkRow = function () {
       for (let i = 0; i < 3; i++) {
         if (
@@ -53,6 +55,7 @@ const play = (function () {
       }
     };
 
+    // diagnols match
     const checkDiagnol = function () {
       if (
         game.board[0][0] == game.board[1][1] &&
@@ -71,11 +74,13 @@ const play = (function () {
       }
     };
 
+    // checks for matching in minimal attemps
     if (checkCol()) return;
     if (checkRow()) return;
     if (checkDiagnol()) return;
   };
 
+  // mark moves on interal gameboard
   const changeGameBoard = function (row, col) {
     for (let i = 1; i <= 3; i++) {
       for (let j = 1; j <= 3; j++) {
@@ -86,6 +91,7 @@ const play = (function () {
     }
   };
 
+  // swap between default players
   const changePlayers = function () {
     game.currentPlayer.symbol == 'x'
       ? (game.currentPlayer.symbol = 'o')
@@ -93,24 +99,32 @@ const play = (function () {
   };
 
   const makeMove = function (row, col, cell) {
+    // stops the game when maching or ties
     if (game.gameOver || game.tie) {
       return;
     }
 
+    // change internal gameboard
     play.changeGameBoard(row, col);
 
+    // check for matches and ties
     play.checkMatch();
     play.checkTie();
 
-    if (game.gameOver || game.tie) {
-      displayController.displayStats(
-        `GameOver: ${game.gameOver}, Tie: ${game.tie}, Winner: ${game.winner}`
-      );
-    }
-
+    // display cell symbol
     displayController.displayMove(cell);
 
+    // change players
     play.changePlayers();
+
+    // display stats
+    if (game.gameOver || game.tie) {
+      displayController.displayStats(
+        `GameOver: ${game.gameOver}, Tie: ${game.tie}, Winner: ${
+          game.tie ? null : game.winner
+        }`
+      );
+    }
   };
 
   const checkTie = function () {
@@ -144,6 +158,7 @@ const displayController = (function () {
   const statsEl = document.getElementById('stats');
 
   const displayMove = function (cell) {
+    // mark cell as checked after displaying symbol
     if (!cell.dataset.checked) {
       cell.textContent = game.currentPlayer.symbol;
       cell.dataset.checked = true;
@@ -165,7 +180,7 @@ const displayController = (function () {
       const col = e.target.dataset.col;
 
       // avoid playing on same cell twice
-      if (!currentCell.dataset.checked && !game.gameOver && !game.tie) {
+      if (!currentCell.dataset.checked) {
         play.makeMove(row, col, currentCell);
       }
     });
