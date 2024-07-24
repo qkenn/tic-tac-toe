@@ -22,7 +22,13 @@ const game = (function game() {
 // }
 
 const play = (function () {
-  function checkMatch() {
+  const changeGameProperties = function () {
+    game.gameOver = true;
+    game.winner = game.currentPlayer.symbol;
+    return true;
+  };
+
+  const checkMatch = function () {
     const checkCol = function () {
       for (let i = 0; i < 3; i++) {
         if (
@@ -30,9 +36,7 @@ const play = (function () {
           game.board[i][1] == game.board[i][2] &&
           game.board[i][0] != ''
         ) {
-          game.gameOver = true;
-          game.winner = game.currentPlayer.symbol;
-          return true;
+          play.changeGameProperties();
         }
       }
     };
@@ -44,32 +48,33 @@ const play = (function () {
           game.board[1][i] == game.board[2][i] &&
           game.board[0][i] != ''
         ) {
-          game.gameOver = true;
-          game.winner = game.currentPlayer.symbol;
-          return true;
+          play.changeGameProperties();
         }
       }
     };
 
     const checkDiagnol = function () {
       if (
-        (game.board[0][0] == game.board[1][1] &&
-          game.board[1][1] == game.board[2][2] &&
-          game.board[0][0] != '') ||
-        (game.board[0][2] == game.board[1][1] &&
-          game.board[1][1] == game.board[2][0] &&
-          game.board[0][2] != '')
+        game.board[0][0] == game.board[1][1] &&
+        game.board[1][1] == game.board[2][2] &&
+        game.board[0][0] != ''
       ) {
-        game.gameOver = true;
-        game.winner = game.currentPlayer.symbol;
-        return true;
+        play.changeGameProperties();
+      }
+
+      if (
+        game.board[0][2] == game.board[1][1] &&
+        game.board[1][1] == game.board[2][0] &&
+        game.board[0][2] != ''
+      ) {
+        play.changeGameProperties();
       }
     };
 
-    if (checkCol()) return true;
-    if (checkRow()) return true;
-    if (checkDiagnol()) return true;
-  }
+    if (checkCol()) return;
+    if (checkRow()) return;
+    if (checkDiagnol()) return;
+  };
 
   const changeGameBoard = function (row, col) {
     for (let i = 1; i <= 3; i++) {
@@ -104,6 +109,7 @@ const play = (function () {
     }
 
     displayController.displayMove(cell);
+
     play.changePlayers();
   };
 
@@ -120,7 +126,6 @@ const play = (function () {
     if (checkedElements == 9) {
       game.tie = true;
       game.gameOver = true;
-      return true;
     }
   };
 
@@ -130,6 +135,7 @@ const play = (function () {
     makeMove,
     checkTie,
     changeGameBoard,
+    changeGameProperties,
   };
 })();
 
